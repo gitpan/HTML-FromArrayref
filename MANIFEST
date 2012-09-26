@@ -1,10 +1,12 @@
 Changes
 lib/HTML/FromArrayref.pm
-Makefile.PL
+Build.PL
 MANIFEST			This list of files
 README
+ignore.txt
 t/00-load.t
 t/01-HTML.t
 t/02-tags.t
-META.yml                                 Module YAML meta-data (added by MakeMaker)
-META.json                                Module JSON meta-data (added by MakeMaker)
+Makefile.PL
+META.yml
+META.json

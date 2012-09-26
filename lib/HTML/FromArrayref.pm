@@ -6,8 +6,11 @@ use warnings;
 
 use base qw( Exporter );
 our @EXPORT = qw( HTML );
-our @EXPORT_OK = qw( start_tag end_tag );
-our %EXPORT_TAGS = (TAGS => [qw( start_tag end_tag )]);
+our @EXPORT_OK = qw( start_tag end_tag html_strict html_transitional html_frameset );
+our %EXPORT_TAGS = (
+	TAGS => [qw( start_tag end_tag )],
+	DOCTYPES => [qw( html_strict html_transitional html_frameset )]
+);
 
 use HTML::Entities;
 
@@ -21,7 +24,7 @@ Version 1.01
 
 =cut
 
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 =head1 SYNOPSIS
 
@@ -57,10 +60,9 @@ is another list of strings and arrayrefs, which will be used to generate the con
 =cut
 
 sub HTML (@) {
-	join '',
-		grep $_,
-			map { ref $_ eq 'ARRAY' ? element( @$_ ) : encode_entities( $_ ) }
-				@_;
+	join '', grep $_, map {
+		ref $_ eq 'ARRAY' ? element( @$_ ) : encode_entities( $_ )
+	} @_;
 }
 
 =head2 element()
@@ -69,12 +71,17 @@ Recursively renders HTML elements from arrayrefs
 
 =cut
 
+my %void; @void{ qw(
+	area base br col command embed hr img input
+	keygen link meta param source track wbr
+) } = (1)x16;
+
 sub element {
-	my ( $element_name, $attributes, @content ) = @_;
+	my ( $tag_name, $attributes, @content ) = @_;
 
 	# If an element's name is an array ref then it's
 	# really text to print without encoding
-	return $element_name->[0] if ref $element_name eq 'ARRAY';
+	return $tag_name->[0] if ref $tag_name eq 'ARRAY';
 
 	# If the second item in the list is not a hashref,
 	# then the element has no attributes
@@ -85,15 +92,14 @@ sub element {
 
 	# If the first expression in the list is false, then skip
 	# the element and return its content instead
-	return HTML( @content ) if not $element_name;
+	return HTML( @content ) if not $tag_name;
 
 	# Return the element start tag with its formatted and
 	# encoded attributes, and (optionally) content and
 	# end tag
 	join '', grep $_,
-		'<', lc $element_name, attributes( %$attributes ), ! @content && ' /', '>',
-		HTML( @content ),
-		@content && "</$element_name>";
+		'<', $tag_name, attributes( %$attributes ), '>',
+		! $void{ lc $tag_name } && ( HTML( @content ), "</$tag_name>" );
 }
 
 =head2 start_tag()
@@ -103,10 +109,10 @@ Takes a list with an element name and an optional hashref defining the element's
 =cut
 
 sub start_tag {
-	my ( $element_name, $attributes ) = @_;
+	my ( $tag_name, $attributes ) = @_;
 
 	join '', grep $_,
-		'<', lc $element_name, attributes( %$attributes ), '>';
+		'<', $tag_name, attributes( %$attributes ), '>';
 }
 
 =head2 end_tag()
@@ -135,6 +141,24 @@ sub attributes {
 	}
 	join ' ', '', @html;
 }
+
+=head2 DOCTYPEs
+
+These make it easy to add a valid doctype declaration to your document
+
+=cut
+
+sub html_strict { << '' }
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+
+sub html_transitional { << '' }
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html4/loose.dtd">
+
+sub html_frameset { << '' }
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"
+	"http://www.w3.org/TR/html4/frameset.dtd">
 
 =head1 EXAMPLES
 
@@ -258,7 +282,7 @@ L<http://search.cpan.org/dist/HTML-FromArrayref/>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Nic Wolff.
+Copyright 2012 Nic Wolff.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
