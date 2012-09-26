@@ -16,9 +16,9 @@ name: HTML-FromArrayref
 provides:
   HTML::FromArrayref:
     file: lib/HTML/FromArrayref.pm
-    version: 1.02
+    version: 1.03
 requires:
   perl: 5.006
 resources:
   license: http://dev.perl.org/licenses/
-version: 1.02
+version: 1.03
