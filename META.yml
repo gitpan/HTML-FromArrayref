@@ -1,14 +1,14 @@
 ---
 name: HTML-FromArrayref
-version: 1.04
+version: 1.05
 author:
   - 'Nic Wolff <nic@angel.net>'
 abstract: Output HTML described by a Perl data structure
 license: perl
 requires:
+  HTML::Entities: 0
   perl: 5.006
 build_requires:
-  HTML::Entities: 0
   Test::More: 0
 generated_by: Module::Build version 0.280801
 meta-spec:
@@ -17,6 +17,6 @@ meta-spec:
 provides:
   HTML::FromArrayref:
     file: lib/HTML/FromArrayref.pm
-    version: 1.04
+    version: 1.05
 resources:
   license: http://dev.perl.org/licenses/
