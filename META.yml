@@ -1,24 +1,22 @@
 ---
-abstract: 'Output HTML described by a Perl data structure'
+name: HTML-FromArrayref
+version: 1.04
 author:
   - 'Nic Wolff <nic@angel.net>'
-build_requires:
-  Test::More: 0
-configure_requires:
-  Module::Build: 0.40
-dynamic_config: 1
-generated_by: 'Module::Build version 0.4003, CPAN::Meta::Converter version 2.112150'
+abstract: Output HTML described by a Perl data structure
 license: perl
+requires:
+  perl: 5.006
+build_requires:
+  HTML::Entities: 0
+  Test::More: 0
+generated_by: Module::Build version 0.280801
 meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.4.html
-  version: 1.4
-name: HTML-FromArrayref
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2
 provides:
   HTML::FromArrayref:
     file: lib/HTML/FromArrayref.pm
-    version: 1.03
-requires:
-  perl: 5.006
+    version: 1.04
 resources:
   license: http://dev.perl.org/licenses/
-version: 1.03
